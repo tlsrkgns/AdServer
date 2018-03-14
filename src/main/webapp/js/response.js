@@ -1,0 +1,1 @@
+document.write("<iframe src=\"http://localhost:8080/advertisement\" width=\"420\" height=\"419\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"no\"> </iframe>");
