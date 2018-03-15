@@ -26,27 +26,27 @@ public class AdServerController {
 
     @GetMapping("/AdServer")
     @ResponseBody
-    public String getScripts(@RequestParam("areacode") String areacode) {
+    public String getScripts(@RequestParam("areacode") String areaCode) {
         // 요청
-        adServerService.collectData(getClientIP(), areacode + " code request");
-        return adServerService.getScripts(areacode);
+        adServerService.recordRequestData(getClientIP(), areaCode);
+        return adServerService.getScripts(areaCode);
     }
 
     @GetMapping("/advertisement")
-    public String getAdvertisement(@RequestParam("adpage") String adpage) {
-        return adpage;
+    public String getAdvertisement(@RequestParam("adpage") String adPage) {
+        return adPage;
     }
 
     @GetMapping("/impressions")
-    public void impressions(@RequestParam("adpage") String adpage) {
+    public void impressions(@RequestParam("adpage") String adPage) {
         // 노출
-        adServerService.collectData(getClientIP(), adpage + " impressions cost : " + adServerService.getCpm(adpage) / 1000.0);
+        adServerService.recordAdPageData(getClientIP(), adPage, "impressions");
     }
 
     @GetMapping("/click")
-    public String click(@RequestParam("adpage") String adpage, @RequestParam("adsite") String adsite) {
+    public String click(@RequestParam("adpage") String adPage, @RequestParam("adsite") String adSite) {
         // 클릭
-        adServerService.collectData(getClientIP(), adsite + " click cost : " + adServerService.getCpm(adpage) / 1000.0);
-        return "redirect:" + adsite;
+        adServerService.recordAdPageData(getClientIP(), adPage, "click");
+        return "redirect:" + adSite;
     }
 }

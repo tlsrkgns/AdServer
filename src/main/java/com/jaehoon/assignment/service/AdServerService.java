@@ -72,9 +72,22 @@ public class AdServerService {
         compaigns.add(compaign5);
     }
 
-    public void collectData(String clientIP, String body) {
+    private void writeLog(String clientIP, String body) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         log.info("clientIP : " + clientIP + " " + "time : " + currentDateTime + " " + "body : " + body);
+    }
+
+    private int getCpm(String adpage) {
+        Compaign compaign = compaigns.stream().filter(c -> c.getImg().equals(adpage)).findFirst().get();
+        return compaign.getCpm();
+    }
+
+    public void recordRequestData(String clientIP, String areaCode) {
+        writeLog(clientIP, areaCode + " code request");
+    }
+
+    public void recordAdPageData(String clientIP, String adPage, String type) {
+        writeLog(clientIP, adPage + " " + type + ", cost : " + getCpm(adPage) / 1000.0);
     }
 
     public String getScripts(String code) {
@@ -87,10 +100,5 @@ public class AdServerService {
                 + "\\\" marginheight=\\\"0\\\"marginwidth=\\\"0\\\" scrolling=\\\"no\\\"> </iframe>\");";
 
         return script;
-    }
-
-    public int getCpm(String adpage) {
-        Compaign compaign = compaigns.stream().filter(c -> c.getImg().equals(adpage)).findFirst().get();
-        return compaign.getCpm();
     }
 }
