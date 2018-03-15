@@ -1,9 +1,16 @@
 package com.jaehoon.assignment.model;
 
-public class Compaign {
+public class Compaign implements Comparable<Compaign> {
+    public enum Type {
+        CPM, CPC
+    }
+
+    private static final double CTR = 0.002;
+
     private String img;
     private int width, heigh;
-    private int cpm;
+    private int cost;
+    private Type type;
 
     public String getImg() {
         return img;
@@ -29,11 +36,30 @@ public class Compaign {
         this.heigh = heigh;
     }
 
-    public int getCpm() {
-        return cpm;
+    public int getCost() {
+        return cost;
     }
 
-    public void setCpm(int cpm) {
-        this.cpm = cpm;
+    public void setCost(int cost) {
+        this.cost = cost;
     }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    @Override
+    public int compareTo(Compaign o) {
+        double cost1, cost2;
+        cost1 = (this.getType().equals(Compaign.Type.CPM)) ? this.getCost() : this.getCost() * CTR * 1000;
+        cost2 = (o.getType().equals(Compaign.Type.CPM)) ? o.getCost() : o.getCost() * CTR * 1000;
+        int compare = Double.compare(cost2, cost1);
+
+        return compare;
+    }
+
 }

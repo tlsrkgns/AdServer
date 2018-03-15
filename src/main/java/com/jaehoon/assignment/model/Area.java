@@ -1,19 +1,19 @@
 package com.jaehoon.assignment.model;
 
-enum Code {
-    A, B, C
-}
-
 public class Area {
+    public enum Code {
+        A, B, C
+    }
+
     private Code code;
     private int width, heigh;
 
-    public String getCode() {
-        return code.toString();
+    public Code getCode() {
+        return code;
     }
 
-    public void setCode(String code) {
-        this.code = Code.valueOf(code);
+    public void setCode(Code code) {
+        this.code = code;
     }
 
     public int getWidth() {
