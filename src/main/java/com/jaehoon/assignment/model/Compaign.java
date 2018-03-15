@@ -5,7 +5,7 @@ public class Compaign implements Comparable<Compaign> {
         CPM, CPC
     }
 
-    private static final double CTR = 0.002;
+    public static final double CTR = 0.002;
 
     private String img;
     private int width, heigh;
@@ -55,8 +55,8 @@ public class Compaign implements Comparable<Compaign> {
     @Override
     public int compareTo(Compaign o) {
         double cost1, cost2;
-        cost1 = (this.getType().equals(Compaign.Type.CPM)) ? this.getCost() : this.getCost() * CTR * 1000;
-        cost2 = (o.getType().equals(Compaign.Type.CPM)) ? o.getCost() : o.getCost() * CTR * 1000;
+        cost1 = (this.getType().equals(Type.CPM)) ? this.getCost() : this.getCost() * CTR * 1000;
+        cost2 = (o.getType().equals(Type.CPM)) ? o.getCost() : o.getCost() * CTR * 1000;
         int compare = Double.compare(cost2, cost1);
 
         return compare;

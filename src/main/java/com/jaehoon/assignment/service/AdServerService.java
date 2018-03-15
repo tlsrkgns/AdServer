@@ -3,7 +3,11 @@ package com.jaehoon.assignment.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,13 +15,13 @@ import org.springframework.stereotype.Service;
 
 import com.jaehoon.assignment.model.Area;
 import com.jaehoon.assignment.model.Compaign;
+import com.jaehoon.assignment.model.Compaign.Type;
 
 @Service
 public class AdServerService {
     Logger log = LogManager.getLogger(this.getClass());
     private List<Area> areas = new ArrayList<>();
     private List<Compaign> compaigns = new ArrayList<>();
-    private static final double CTR = 0.002;
 
     AdServerService() {
         Area area1 = new Area();
@@ -50,7 +54,7 @@ public class AdServerService {
         compaign2.setImg("dong2");
         compaign2.setWidth(700);
         compaign2.setHeigh(674);
-        compaign2.setCost(600);
+        compaign2.setCost(599);
         compaign2.setType(Compaign.Type.CPC);
         compaigns.add(compaign2);
 
@@ -78,7 +82,12 @@ public class AdServerService {
         compaign5.setType(Compaign.Type.CPC);
         compaigns.add(compaign5);
     }
-
+    //T타입 객체내의 특정 키를 기준으로 중복제거
+    private <T> Predicate<T> distinctByKey( Function<? super T, Object> keyExtractor) {
+        Map<Object, Boolean> map = new HashMap<>();
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+    
     private void writeLog(String clientIP, String body) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         log.info("clientIP : " + clientIP + " " + "time : " + currentDateTime + " " + "body : " + body);
@@ -108,8 +117,8 @@ public class AdServerService {
 
         List<Compaign> shuffleCompaigns = new ArrayList<>(compaigns);
         Collections.shuffle(shuffleCompaigns);
-        Compaign compaign = shuffleCompaigns.stream().filter(c -> (c.getWidth() == area.getWidth() && c.getHeigh() == area.getHeigh())).sorted()
-                .findFirst().get();
+        Compaign compaign = shuffleCompaigns.stream().filter(c -> (c.getWidth() == area.getWidth() && c.getHeigh() == area.getHeigh()))
+                .filter(distinctByKey(c -> (c.getType().equals(Type.CPM)) ? c.getCost() : c.getCost() * Compaign.CTR * 1000)).sorted().limit(3).findFirst().get();
 
         String script = "document.write(\"<iframe src=\\\"http://localhost:8080/advertisement?adpage=" + compaign.getImg() + "\\\"width=\\\""
                 + compaign.getWidth() + "\\\" height=\\\"" + compaign.getWidth()
