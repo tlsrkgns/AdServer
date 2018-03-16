@@ -6,7 +6,7 @@ public class Area {
     }
 
     private Code code;
-    private int width, heigh;
+    private int width, height;
 
     public Code getCode() {
         return code;
@@ -24,11 +24,11 @@ public class Area {
         this.width = width;
     }
 
-    public int getHeigh() {
-        return heigh;
+    public int getHeight() {
+        return height;
     }
 
-    public void setHeigh(int heigh) {
-        this.heigh = heigh;
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

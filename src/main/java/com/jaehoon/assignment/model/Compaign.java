@@ -8,7 +8,7 @@ public class Compaign implements Comparable<Compaign> {
     public static final double CTR = 0.002;
 
     private String img;
-    private int width, heigh;
+    private int width, height;
     private int cost;
     private Type type;
 
@@ -28,12 +28,12 @@ public class Compaign implements Comparable<Compaign> {
         this.width = width;
     }
 
-    public int getHeigh() {
-        return heigh;
+    public int getHeight() {
+        return height;
     }
 
-    public void setHeigh(int heigh) {
-        this.heigh = heigh;
+    public void setHeight(int heigh) {
+        this.height = heigh;
     }
 
     public int getCost() {
