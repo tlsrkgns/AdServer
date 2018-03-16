@@ -3,11 +3,7 @@ package com.jaehoon.assignment.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,11 +11,14 @@ import org.springframework.stereotype.Service;
 
 import com.jaehoon.assignment.model.Area;
 import com.jaehoon.assignment.model.Compaign;
-import com.jaehoon.assignment.model.Compaign.Type;
 
 @Service
 public class AdServerService {
     Logger log = LogManager.getLogger(this.getClass());
+
+    private static final int FIRST_RATIO = 7;
+    private static final int SECOND_RATIO = 2;
+
     private List<Area> areas = new ArrayList<>();
     private List<Compaign> compaigns = new ArrayList<>();
 
@@ -82,12 +81,31 @@ public class AdServerService {
         compaign5.setType(Compaign.Type.CPC);
         compaigns.add(compaign5);
     }
-    //T타입 객체내의 특정 키를 기준으로 중복제거
-    private <T> Predicate<T> distinctByKey( Function<? super T, Object> keyExtractor) {
-        Map<Object, Boolean> map = new HashMap<>();
-        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+
+    public void recordRequestData(String clientIP, String areaCode) {
+        writeLog(clientIP, areaCode + " code request");
     }
-    
+
+    public void recordAdPageData(String clientIP, String adPage, String type) {
+        writeLog(clientIP, adPage + " " + type + ", cost : " + getAdCost(adPage) + " " + getAdCostType(adPage));
+    }
+
+    public String getScripts(String code) {
+        Area area = areas.stream().filter(a -> (a.getCode().equals(Area.Code.valueOf(code)))).findFirst().get();
+        List<Compaign> shuffleCompaigns = new ArrayList<>(compaigns);
+        Collections.shuffle(shuffleCompaigns);
+        Object[] adCandidate = shuffleCompaigns.stream().filter(c -> (c.getWidth() == area.getWidth() && c.getHeigh() == area.getHeigh())).sorted()
+                .limit(3).toArray();
+
+        Compaign compaign = adSelect(adCandidate);
+
+        String script = "document.write(\"<iframe src=\\\"http://localhost:8080/advertisement?adpage=" + compaign.getImg() + "\\\"width=\\\""
+                + compaign.getWidth() + "\\\" height=\\\"" + compaign.getWidth()
+                + "\\\" marginheight=\\\"0\\\"marginwidth=\\\"0\\\" scrolling=\\\"no\\\"> </iframe>\");";
+
+        return script;
+    }
+
     private void writeLog(String clientIP, String body) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         log.info("clientIP : " + clientIP + " " + "time : " + currentDateTime + " " + "body : " + body);
@@ -103,27 +121,20 @@ public class AdServerService {
         return compaign.getType().toString();
     }
 
-    public void recordRequestData(String clientIP, String areaCode) {
-        writeLog(clientIP, areaCode + " code request");
-    }
+    private Compaign adSelect(Object[] adCandidate) {
+        Object compaign;
+        int rand = (int) (Math.random() * 10);
 
-    public void recordAdPageData(String clientIP, String adPage, String type) {
-        writeLog(clientIP, adPage + " " + type + ", cost : " + getAdCost(adPage) + " " + getAdCostType(adPage));
-    }
+        if (adCandidate.length == 1) {
+            compaign = adCandidate[0];
+        } else if (adCandidate.length == 2) {
+            compaign = (rand < FIRST_RATIO) ? adCandidate[0] : adCandidate[1];
+        } else if (adCandidate.length == 3) {
+            compaign = (rand < FIRST_RATIO) ? adCandidate[0] : (rand < FIRST_RATIO + SECOND_RATIO) ? adCandidate[1] : adCandidate[2];
+        } else {
+            compaign = compaigns.stream().findAny().get();
+        }
 
-    public String getScripts(String code) {
-        Area area = areas.stream().filter(a -> (a.getCode().equals(Area.Code.valueOf(code)))).findFirst().get();
-        // log.info("dsfsdfsd : " + area.getHeigh() + "," + area.getWidth());
-
-        List<Compaign> shuffleCompaigns = new ArrayList<>(compaigns);
-        Collections.shuffle(shuffleCompaigns);
-        Compaign compaign = shuffleCompaigns.stream().filter(c -> (c.getWidth() == area.getWidth() && c.getHeigh() == area.getHeigh()))
-                .filter(distinctByKey(c -> (c.getType().equals(Type.CPM)) ? c.getCost() : c.getCost() * Compaign.CTR * 1000)).sorted().limit(3).findFirst().get();
-
-        String script = "document.write(\"<iframe src=\\\"http://localhost:8080/advertisement?adpage=" + compaign.getImg() + "\\\"width=\\\""
-                + compaign.getWidth() + "\\\" height=\\\"" + compaign.getWidth()
-                + "\\\" marginheight=\\\"0\\\"marginwidth=\\\"0\\\" scrolling=\\\"no\\\"> </iframe>\");";
-
-        return script;
+        return (Compaign) compaign;
     }
 }
