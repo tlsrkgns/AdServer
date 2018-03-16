@@ -126,16 +126,16 @@ public class AdServerService {
         return candidateAd;
     }
 
-    private Compaign adSelect(Object[] adCandidate) {
+    private Compaign adSelect(Object[] candidateAd) {
         Object compaign;
         int rand = (int) (Math.random() * 10);
 
-        if (adCandidate.length == 1) {
-            compaign = adCandidate[0];
-        } else if (adCandidate.length == 2) {
-            compaign = (rand < FIRST_RATIO) ? adCandidate[0] : adCandidate[1];
-        } else if (adCandidate.length == 3) {
-            compaign = (rand < FIRST_RATIO) ? adCandidate[0] : (rand < FIRST_RATIO + SECOND_RATIO) ? adCandidate[1] : adCandidate[2];
+        if (candidateAd.length == 1) {
+            compaign = candidateAd[0];
+        } else if (candidateAd.length == 2) {
+            compaign = (rand < FIRST_RATIO) ? candidateAd[0] : candidateAd[1];
+        } else if (candidateAd.length == 3) {
+            compaign = (rand < FIRST_RATIO) ? candidateAd[0] : (rand < FIRST_RATIO + SECOND_RATIO) ? candidateAd[1] : candidateAd[2];
         } else {
             compaign = new Compaign();
         }
