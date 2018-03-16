@@ -16,10 +16,14 @@
 	    <section class="err-contents">
 	        <div class="err-main-contents">
 	            <div class="err-contents-image">
-	                <script src="http://localhost:8080/AdServer?areacode=A"></script>
-	                <script src="http://localhost:8080/AdServer?areacode=B"></script> 
+	                <script src="http://localhost:8080/AdServer?areacode=C"></script>
 	            </div>
-	            <script src="http://localhost:8080/AdServer?areacode=C"></script> 
+	            <div class="err-contents-image">
+	                <script src="http://localhost:8080/AdServer?areacode=A"></script>
+	            </div>
+	            <div class="err-contents-image">
+	                <script src="http://localhost:8080/AdServer?areacode=B"></script>
+	            </div>
 	        </div>
 	    </section>
     </section>

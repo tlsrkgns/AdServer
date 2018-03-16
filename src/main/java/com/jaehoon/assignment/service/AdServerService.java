@@ -14,7 +14,7 @@ import com.jaehoon.assignment.model.Compaign;
 
 @Service
 public class AdServerService {
-    Logger log = LogManager.getLogger(this.getClass());
+    Logger log = LogManager.getLogger("log");
 
     private static final int FIRST_RATIO = 7;
     private static final int SECOND_RATIO = 2;
@@ -99,9 +99,9 @@ public class AdServerService {
 
         Compaign compaign = adSelect(adCandidate);
 
-        String script = "document.write(\"<iframe src=\\\"http://localhost:8080/advertisement?adpage=" + compaign.getImg() + "\\\"width=\\\""
-                + compaign.getWidth() + "\\\" height=\\\"" + compaign.getWidth()
-                + "\\\" marginheight=\\\"0\\\"marginwidth=\\\"0\\\" scrolling=\\\"no\\\"> </iframe>\");";
+        String script = "document.write(\"img : " + compaign.getImg() + ", cost : " + compaign.getCost() + " " + compaign.getType()
+                + "<br><iframe src=\\\"http://localhost:8080/advertisement?adpage=" + compaign.getImg() + "\\\"width=\\\"" + compaign.getWidth()
+                + "\\\" height=\\\"" + compaign.getWidth() + "\\\" marginheight=\\\"0\\\"marginwidth=\\\"0\\\" scrolling=\\\"no\\\"> </iframe>\");";
 
         return script;
     }
