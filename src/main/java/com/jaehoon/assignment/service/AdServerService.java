@@ -92,13 +92,7 @@ public class AdServerService {
 
     public String getScripts(String code) {
         Area area = areas.stream().filter(a -> (a.getCode().equals(Area.Code.valueOf(code)))).findFirst().get();
-        List<Compaign> shuffleCompaigns = new ArrayList<>(compaigns);
-        Collections.shuffle(shuffleCompaigns);
-
-        Object[] candidateAd = shuffleCompaigns.stream().filter(c -> (c.getWidth() == area.getWidth() && c.getHeight() == area.getHeight())).sorted()
-                .limit(3).toArray();
-
-        Compaign compaign = adSelect(candidateAd);
+        Compaign compaign = adSelect(getCandidateAd(area));
 
         String script = "document.write(\"img : " + compaign.getImg() + ", cost : " + compaign.getCost() + " " + compaign.getType()
                 + "<br><iframe src=\\\"http://localhost:8080/advertisement?adpage=" + compaign.getImg() + "\\\"width=\\\"" + area.getWidth()
@@ -120,6 +114,16 @@ public class AdServerService {
     private String getAdCostType(String adpage) {
         Compaign compaign = compaigns.stream().filter(c -> c.getImg().equals(adpage)).findFirst().get();
         return compaign.getType().toString();
+    }
+
+    private Object[] getCandidateAd(Area area) {
+        List<Compaign> shuffleCompaigns = new ArrayList<>(compaigns);
+        Collections.shuffle(shuffleCompaigns);
+
+        Object[] candidateAd = shuffleCompaigns.stream().filter(c -> (c.getWidth() == area.getWidth() && c.getHeight() == area.getHeight())).sorted()
+                .limit(3).toArray();
+
+        return candidateAd;
     }
 
     private Compaign adSelect(Object[] adCandidate) {
