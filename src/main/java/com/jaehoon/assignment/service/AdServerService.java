@@ -101,8 +101,8 @@ public class AdServerService {
         Compaign compaign = adSelect(candidateAd);
 
         String script = "document.write(\"img : " + compaign.getImg() + ", cost : " + compaign.getCost() + " " + compaign.getType()
-                + "<br><iframe src=\\\"http://localhost:8080/advertisement?adpage=" + compaign.getImg() + "\\\"width=\\\"" + compaign.getWidth()
-                + "\\\" height=\\\"" + compaign.getHeight() + "\\\" marginheight=\\\"0\\\"marginwidth=\\\"0\\\" scrolling=\\\"no\\\"> </iframe>\");";
+                + "<br><iframe src=\\\"http://localhost:8080/advertisement?adpage=" + compaign.getImg() + "\\\"width=\\\"" + area.getWidth()
+                + "\\\" height=\\\"" + area.getHeight() + "\\\" marginheight=\\\"0\\\"marginwidth=\\\"0\\\" scrolling=\\\"no\\\"> </iframe>\");";
 
         return script;
     }
@@ -133,7 +133,7 @@ public class AdServerService {
         } else if (adCandidate.length == 3) {
             compaign = (rand < FIRST_RATIO) ? adCandidate[0] : (rand < FIRST_RATIO + SECOND_RATIO) ? adCandidate[1] : adCandidate[2];
         } else {
-            compaign = compaigns.stream().findAny().get();
+            compaign = new Compaign();
         }
 
         return (Compaign) compaign;
