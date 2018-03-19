@@ -1,6 +1,6 @@
 package com.jaehoon.assignment.model;
 
-public class Compaign implements Comparable<Compaign> {
+public class Campaign {
     public enum Type {
         CPM, CPC
     }
@@ -52,14 +52,7 @@ public class Compaign implements Comparable<Compaign> {
         this.type = type;
     }
 
-    @Override
-    public int compareTo(Compaign o) {
-        double cost1, cost2;
-        cost1 = (this.getType().equals(Type.CPM)) ? this.getCost() : this.getCost() * CTR * 1000;
-        cost2 = (o.getType().equals(Type.CPM)) ? o.getCost() : o.getCost() * CTR * 1000;
-        int compare = Double.compare(cost2, cost1);
-
-        return compare;
+    public double getCPM() {
+        return (this.getType().equals(Type.CPM)) ? this.getCost() : this.getCost() * CTR * 1000;
     }
-
 }
